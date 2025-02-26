@@ -1,1 +1,45 @@
 @import "tailwindcss";
+
+@layer base {
+  @font-face {
+    font-family: "Nunito-Regular";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(./assets/fonts/Nunito-Regular.ttf) format("truetype");
+  }
+
+  @font-face {
+    font-family: "Nunito-Medium";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url(./assets/fonts/Nunito-Medium.ttf) format("truetype");
+  }
+
+  @font-face {
+    font-family: "Nunito-SemiBold";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(./assets/fonts/Nunito-SemiBold.ttf) format("truetype");
+  }
+
+  @font-face {
+    font-family: "Nunito-Bold";
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url(./assets/fonts/Nunito-Bold.ttf) format("truetype");
+  }
+
+  html {
+    font-family: "Nunito-Regular";
+  }
+}
+
+@theme {
+  --color-primary-solid: #e77e3a;
+  --color-primary-light: #fae5d8;
+  --color-secondary-solid: #7baed4;
+}
