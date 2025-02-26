@@ -13,7 +13,7 @@ function TopicsGrid() {
   });
 
   return (
-    <div className="grid grid-cols-2 mt-10 gap-10">
+    <>
       {data?.data?.map((topic: any) => {
         return (
           <div
@@ -28,7 +28,7 @@ function TopicsGrid() {
           </div>
         );
       })}
-    </div>
+    </>
   );
 }
 

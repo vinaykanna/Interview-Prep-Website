@@ -1,8 +1,11 @@
+import AddTopic from "@/components/AddTopic";
 import Button from "@/components/Button";
 import TopicsGrid from "@/components/TopicsGrid";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 function Topic() {
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -15,11 +18,14 @@ function Topic() {
           Back
         </Button>
         <div className="flex gap-4">
-          <Button>Add Topic</Button>
+          <Button onClick={() => setOpen(true)}>Add Topic</Button>
           <Button>Add Question</Button>
         </div>
       </div>
-      <TopicsGrid />
+      <div className="grid grid-cols-3 mt-10 gap-10">
+        <TopicsGrid />
+      </div>
+      {open && <AddTopic title="Create Topic" onClose={() => setOpen(false)} />}
     </div>
   );
 }

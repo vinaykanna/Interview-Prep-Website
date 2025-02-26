@@ -28,8 +28,8 @@ function TextField(props: any) {
       {!textArea ? (
         <input
           className={twMerge(
-            "px-4 py-2 border-[1px] border-primary-solid border-solid",
-            "rounded-full bg-white outline-none placeholder:text-[#BDBDBD]",
+            "px-4 py-2 border-[1px] border-black border-solid",
+            "rounded-lg bg-white outline-none placeholder:text-[#BDBDBD]",
             "disabled:opacity-50",
             startIcon && "pl-10",
             endIcon && "pr-10",
@@ -44,8 +44,8 @@ function TextField(props: any) {
         <textarea
           rows={1}
           className={twMerge(
-            "px-4 py-2 border-[1px] border-primary-solid border-solid",
-            "rounded-full bg-white outline-none placeholder:text-[#BDBDBD] resize-none",
+            "px-4 py-2 border-[1px] border-black border-solid",
+            "rounded-lg bg-white outline-none placeholder:text-[#BDBDBD] resize-none",
             fullWidth && "w-full",
             inputClassName
           )}
