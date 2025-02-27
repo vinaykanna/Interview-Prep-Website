@@ -1,11 +1,12 @@
 import db from "../db.ts";
 import getHeaders from "../utils/getHeaders.ts";
+import sluggify from "../utils/sluggify.ts";
 
 async function createTopic(req: Request) {
   try {
     const body = await req.json();
     const { name, description, parent } = body;
-    const slug = name.toLowerCase().replace(/ /g, "-");
+    const slug = sluggify(name);
 
     db.query(
       "INSERT INTO topics (name, slug, description, parent) VALUES (?, ?, ?, ?)",
@@ -127,17 +128,16 @@ async function updateTopic(req: Request, url: URL) {
 
   try {
     const body = await req.json();
-    const { name, parentId, description } = body;
-    const slug = name.toLowerCase().replace(/ /g, "-");
+    const { name, description } = body;
+    const slug = sluggify(name);
 
     db.query(
       `UPDATE topics SET
        name = ?,
        slug = ?,
        description = ?,
-       parent_id = ?,
        updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-      [name, slug, description, parentId, id]
+      [name, slug, description, id]
     );
 
     return new Response(JSON.stringify({ message: "Updated" }), {

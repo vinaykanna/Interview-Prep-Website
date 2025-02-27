@@ -3,7 +3,7 @@ function getHeaders(headers?: HeadersInit) {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "*",
     "Access-Control-Allow-Headers": "*",
-    "Content-Type": "application/json",
+    // "Content-Type": "application/json",
     ...(headers || {}),
   };
 }

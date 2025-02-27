@@ -30,7 +30,7 @@ db.execute(`
       slug TEXT NOT NULL UNIQUE,
       answer TEXT NOT NULL,
       difficulty TEXT CHECK( difficulty IN ('easy', 'medium', 'hard') ) NOT NULL,
-      topic_id INTEGER NOT NULL REFERENCES topics(id) ON DELETE CASCADE,
+      topic TEXT NOT NULL REFERENCES topics(slug) ON DELETE CASCADE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
@@ -46,7 +46,7 @@ db.execute(`
 `);
 
 db.execute(`
-  CREATE INDEX IF NOT EXISTS idx_questions_topic_id ON questions(topic_id);
+  CREATE INDEX IF NOT EXISTS idx_questions_topic_slug ON questions(topic);
 `);
 
 export default db;

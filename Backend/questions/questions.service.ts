@@ -1,15 +1,16 @@
 import db from "../db.ts";
 import getHeaders from "../utils/getHeaders.ts";
+import sluggify from "../utils/sluggify.ts";
 
 async function createQuestion(req: Request) {
   try {
     const body = await req.json();
-    const { name, answer, difficulty, topicId } = body;
-    const slug = name.toLowerCase().replace(/ /g, "-");
+    const { name, answer, difficulty = "easy", topic } = body;
+    const slug = sluggify(name);
 
     db.query(
-      "INSERT INTO questions (name, slug, answer, difficulty, topic_id) VALUES (?, ?, ?, ?, ?)",
-      [name, slug, answer, difficulty, topicId]
+      "INSERT INTO questions (name, slug, answer, difficulty, topic) VALUES (?, ?, ?, ?, ?)",
+      [name, slug, answer, difficulty, topic]
     );
 
     return new Response(JSON.stringify({ message: "Created" }), {
@@ -25,20 +26,23 @@ async function createQuestion(req: Request) {
   }
 }
 
-function getQuestions() {
+function getQuestions(url: URL) {
   try {
-    const topics = db.query("SELECT * FROM questions");
+    const parent = url.searchParams.get("topic");
+    const topics = db.query("SELECT * FROM questions WHERE topic = ?", [
+      parent,
+    ]);
 
     const result = [];
 
-    for (const [id, name, slug, answer, difficulty, topicId] of topics) {
+    for (const [id, name, slug, answer, difficulty, topic] of topics) {
       result.push({
         id,
         name,
         slug,
         difficulty,
         answer,
-        topicId,
+        topic,
       });
     }
 
@@ -79,11 +83,12 @@ async function updateQuestion(req: Request, url: URL) {
 
   try {
     const body = await req.json();
-    const { name, answer, topicId } = body;
+    const { name, answer } = body;
+    const slug = sluggify(name);
 
     db.query(
-      "UPDATE questions SET name = ?, answer = ?, parent_id = ? WHERE id = ?",
-      [name, answer, topicId, id]
+      "UPDATE questions SET name = ?, answer = ?, slug = ? WHERE id = ?",
+      [name, answer, slug, id]
     );
 
     return new Response(JSON.stringify({ message: "Updated" }), {

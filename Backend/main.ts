@@ -6,6 +6,13 @@ import getHeaders from "./utils/getHeaders.ts";
 Deno.serve({ port: 3000 }, (_req) => {
   const url = new URL(_req.url);
 
+  if (_req.method === "OPTIONS") {
+    return new Response(null, {
+      headers: getHeaders(),
+      status: 204,
+    });
+  }
+
   if (url.pathname.includes("topics")) {
     return topicsHandler(_req, url);
   }

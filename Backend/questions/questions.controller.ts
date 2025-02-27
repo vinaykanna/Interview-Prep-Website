@@ -12,7 +12,7 @@ function questionsHandler(req: Request, url: URL) {
   }
 
   if (req.method === "GET") {
-    return getQuestions();
+    return getQuestions(url);
   }
 
   if (req.method === "DELETE") {

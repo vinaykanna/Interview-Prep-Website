@@ -41,3 +41,88 @@
 @theme {
   --color-primary-solid: #e77e3a;
 }
+
+.markdown-body {
+  & h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: bold;
+    font-family: "Nunito-Bold";
+    margin-block: 0.7em;
+  }
+
+  & h1 {
+    font-size: 42px;
+  }
+
+  & h2 {
+    font-size: 32px;
+  }
+
+  & h3 {
+    font-size: 24px;
+  }
+
+  & h4 {
+    font-size: 20px;
+  }
+
+  & h5 {
+    font-size: 18px;
+  }
+
+  & h6 {
+    font-size: 16px;
+  }
+
+  & p {
+    margin-block: 0.5em;
+  }
+
+  & strong {
+    font-weight: bold;
+    font-family: "Nunito-Bold";
+  }
+
+  & ul {
+    list-style: disc;
+    padding-inline-start: 40px;
+
+    & ul {
+      list-style: circle;
+      padding-inline-start: 40px;
+    }
+  }
+
+  & ol {
+    list-style: decimal;
+    padding-inline-start: 40px;
+  }
+
+  & a {
+    color: blue;
+    text-decoration: underline;
+  }
+
+  & blockquote {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
+    border-left: 2px solid #bcc1d1;
+    padding-inline-start: 1em;
+  }
+
+  & img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  & code {
+    background-color: #f6f8fa;
+    border-radius: 4px;
+  }
+}
