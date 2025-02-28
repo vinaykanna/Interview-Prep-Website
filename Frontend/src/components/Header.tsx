@@ -24,7 +24,9 @@ function Header({ setOpenMenu }: any) {
           <Search className="text-primary-solid" />
         </button>
       </header>
-      <SearchDialog isOpen={openSearch} setIsOpen={setOpenSearch} />
+      {openSearch && (
+        <SearchDialog isOpen={openSearch} setIsOpen={setOpenSearch} />
+      )}
     </>
   );
 }
