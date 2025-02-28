@@ -12,25 +12,28 @@ function QuestionPage() {
     queryFn: () => getQuestions({ topic: params.topic || "" }),
   });
 
-  if (isLoading || !data?.data?.length) return null;
+  if (isLoading) return null;
 
   return (
     <section>
-      <div>
-        {data?.data?.map((question: any) => {
-          return (
-            <div
-              onClick={() => navigate(`${question.slug}`)}
-              className={twJoin(
-                "shadow-[0px_4px_10px_0px_#E77E3A33] rounded-lg",
-                "p-4 cursor-pointer mt-4"
-              )}
-            >
-              <h4 className="text-lg font-semibold">{question.name}</h4>
-            </div>
-          );
-        })}
-      </div>
+      {data?.data?.map((question: any) => {
+        return (
+          <div
+            onClick={() => navigate(`${question.slug}`)}
+            className={twJoin(
+              "shadow-[0px_4px_10px_0px_#E77E3A33] rounded-lg",
+              "p-4 cursor-pointer mt-4"
+            )}
+          >
+            <h4 className="text-lg font-semibold">{question.name}</h4>
+          </div>
+        );
+      })}
+      {data?.data?.length === 0 && (
+        <h4 className="text-lg font-bold text-gray-600 text-center mt-10">
+          No questions found
+        </h4>
+      )}
     </section>
   );
 }

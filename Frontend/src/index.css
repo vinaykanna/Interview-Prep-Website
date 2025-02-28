@@ -89,17 +89,17 @@
 
   & ul {
     list-style: disc;
-    padding-inline-start: 40px;
+    padding-inline-start: 30px;
 
     & ul {
       list-style: circle;
-      padding-inline-start: 40px;
+      padding-inline-start: 30px;
     }
   }
 
   & ol {
     list-style: decimal;
-    padding-inline-start: 40px;
+    padding-inline-start: 30px;
   }
 
   & a {
@@ -124,5 +124,9 @@
   & code {
     background-color: #f6f8fa;
     border-radius: 4px;
+
+    @media (max-width: 1024px) {
+      font-size: 14px;
+    }
   }
 }

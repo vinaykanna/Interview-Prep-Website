@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { ChevronLeft, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { searchQuestionsAndTopics } from "@/utils/services";
 import debounce from "@/utils/debounce";
 import { useNavigate, useParams } from "react-router";
+import { twJoin } from "tailwind-merge";
 
-const SearchDialog = ({ setIsOpen }: any) => {
+const SearchDialog = ({ isOpen, setIsOpen }: any) => {
   const navigate = useNavigate();
   const params = useParams();
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,6 +27,14 @@ const SearchDialog = ({ setIsOpen }: any) => {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   const handleSearch = (value: string) => {
     setSearchQuery(value);
   };
@@ -43,14 +52,25 @@ const SearchDialog = ({ setIsOpen }: any) => {
   return (
     <>
       <div
-        className="fixed inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+        className="fixed sm:overflow-hidden inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
         onClick={() => setIsOpen(false)}
       >
         <div
-          className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 transform transition-all duration-300 scale-100"
+          className={twJoin(
+            "bg-white sm:rounded-xl shadow-2xl h-screen sm:h-auto w-full",
+            "sm:max-w-lg sm:p-6 p-4 transform transition-all duration-300 scale-100 flex flex-col"
+          )}
           onClick={(e) => e.stopPropagation()}
         >
-          <form>
+          <div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="cursor-pointer bg-gray-200 px-2 py-1 rounded sm:hidden"
+            >
+              <ChevronLeft />
+            </button>
+          </div>
+          <form className="mt-4">
             <div className="relative">
               <Search
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -65,7 +85,7 @@ const SearchDialog = ({ setIsOpen }: any) => {
               />
             </div>
           </form>
-          <div className="mt-4 max-h-64 overflow-y-auto">
+          <div className="mt-4 sm:max-h-64 overflow-y-auto sm:flex-auto">
             {searchQuery ? (
               <div className="text-gray-600">
                 {topics.length > 0 && (
@@ -88,7 +108,6 @@ const SearchDialog = ({ setIsOpen }: any) => {
                     </ul>
                   </div>
                 )}
-
                 {questions.length > 0 && (
                   <div>
                     <h3 className="text-md font-semibold text-primary-solid mb-2">
@@ -109,7 +128,6 @@ const SearchDialog = ({ setIsOpen }: any) => {
                     </ul>
                   </div>
                 )}
-
                 {topics.length === 0 && questions.length === 0 && (
                   <p className="text-center text-gray-500 py-4">
                     No results found for "{searchQuery}"

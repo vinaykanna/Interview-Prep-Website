@@ -1,8 +1,10 @@
 import { Menu, Search } from "lucide-react";
 import { useState } from "react";
 import SearchDialog from "./Search";
+import { useNavigate } from "react-router";
 
 function Header({ setOpenMenu }: any) {
+  const navigate = useNavigate();
   const [openSearch, setOpenSearch] = useState(false);
 
   return (
@@ -14,9 +16,14 @@ function Header({ setOpenMenu }: any) {
         >
           <Menu />
         </button>
-        <h3 className="font-bold text-2xl flex-1 text-center">
-          Interview Prep
-        </h3>
+        <div className="flex-1 text-center">
+          <button
+            className="font-bold text-2xl text-center cursor-pointer"
+            onClick={() => navigate("/")}
+          >
+            Interview Prep
+          </button>
+        </div>
         <button
           className="cursor-pointer pr-4"
           onClick={() => setOpenSearch(true)}

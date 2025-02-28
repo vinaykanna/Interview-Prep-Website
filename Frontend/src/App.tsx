@@ -7,6 +7,7 @@ import Admin from "./views/Admin/Admin";
 import MainTopic from "./views/MainTopic";
 import SubTopic from "./views/SubTopic";
 import QuestionPage from "./views/QuestionPage";
+import Intro from "./components/Intro";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/">
             <Route index element={<Home />} />
             <Route path="/prep/:mainTopic" element={<MainTopic />}>
+              <Route index element={<Intro />} />
               <Route path=":topic" element={<SubTopic />} />
               <Route path=":topic/:question" element={<QuestionPage />} />
             </Route>

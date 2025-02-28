@@ -51,6 +51,7 @@ const Sidebar = ({ isOpen, setOpen }: any) => {
               item={item}
               toggleItem={toggleItem}
               openItems={openItems}
+              setOpen={setOpen}
             />
           ))}
         </nav>
@@ -59,22 +60,31 @@ const Sidebar = ({ isOpen, setOpen }: any) => {
   );
 };
 
-function MenuItem({ toggleItem, openItems, item, level = 0 }: any) {
+function MenuItem({ toggleItem, openItems, setOpen, item, level = 0 }: any) {
   const navigate = useNavigate();
+  const params = useParams();
   const hasChildren = item.children && item.children.length > 0;
   const isOpen = openItems[item.id] || false;
+  const isActive = params.topic === item.slug;
 
   return (
     <div className="relative">
       <button
         onClick={() => {
-          hasChildren && toggleItem(item.id);
-          !hasChildren && navigate(`${item.slug}`);
+          if (hasChildren) {
+            toggleItem(item.id);
+          }
+
+          if (!hasChildren) {
+            navigate(`${item.slug}`);
+            setOpen(false);
+          }
         }}
         className={twMerge(
-          "w-full flex cursor-pointer items-center justify-between p-3",
+          "w-full flex cursor-pointer items-center justify-between p-3 pl-5",
           "text-gray-700 transition-colors duration-200",
-          "hover:bg-gray-100"
+          "hover:bg-gray-100",
+          isActive && "bg-gray-100"
         )}
       >
         <div className="flex items-center gap-3">
@@ -98,6 +108,7 @@ function MenuItem({ toggleItem, openItems, item, level = 0 }: any) {
               toggleItem={toggleItem}
               openItems={openItems}
               level={level + 1}
+              setOpen={setOpen}
             />
           ))}
         </div>
