@@ -25,7 +25,7 @@ function TopiItem({ topic, navigate }: any) {
       >
         <h4 className="text-xl font-bold"> {topic.name}</h4>
       </div>
-      {isVisible && (
+      {isVisible && topic?.parent !== null && (
         <ContextMenu
           setIsVisible={setIsVisible}
           position={position}
