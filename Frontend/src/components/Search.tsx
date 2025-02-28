@@ -52,7 +52,7 @@ const SearchDialog = ({ isOpen, setIsOpen }: any) => {
   return (
     <>
       <div
-        className="fixed sm:overflow-hidden inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+        className="fixed sm:overflow-hidden inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 flex sm:items-center justify-center z-50 transition-opacity duration-300"
         onClick={() => setIsOpen(false)}
       >
         <div
