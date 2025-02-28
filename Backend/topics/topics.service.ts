@@ -26,8 +26,63 @@ async function createTopic(req: Request) {
   }
 }
 
-function getTopics(url: URL) {
-  const parent = url.searchParams.get("parent");
+function getTopicsByParent(result: any[], allTopics: any[], parent: string) {
+  for (const topic of allTopics) {
+    if (topic.parent === parent) {
+      result.push({
+        ...topic,
+        children: [],
+      });
+    }
+  }
+
+  return result;
+}
+
+function buildHierarchy(items: any[]) {
+  const itemMap = new Map();
+  items.forEach((item: any) =>
+    itemMap.set(item.slug, { ...item, children: [] })
+  );
+
+  const result: any[] = [];
+
+  items.forEach((item) => {
+    if (item.parent === null) {
+      result.push(itemMap.get(item.slug));
+    } else {
+      const parent = itemMap.get(item.parent);
+      if (parent) {
+        parent.children.push(itemMap.get(item.slug));
+      }
+    }
+  });
+
+  return result;
+}
+
+async function getAllTopics(url: URL) {
+  try {
+    const parent = url.searchParams.get("parent");
+    const response = getTopics();
+    const allTopics = await response.json();
+    const hierarchicalItems = buildHierarchy(allTopics);
+    const result = hierarchicalItems.find((item) => item.slug === parent);
+
+    return new Response(JSON.stringify(result?.children || []), {
+      headers: getHeaders(),
+    });
+  } catch (e) {
+    console.log(e);
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      headers: getHeaders(),
+      status: 500,
+    });
+  }
+}
+
+function getTopics(url?: URL) {
+  const parent = url?.searchParams.get("parent");
 
   try {
     let query = "SELECT * FROM topics";
@@ -153,4 +208,11 @@ async function updateTopic(req: Request, url: URL) {
   }
 }
 
-export { createTopic, getTopics, deleteTopic, updateTopic, getTopicBySlug };
+export {
+  createTopic,
+  getTopics,
+  deleteTopic,
+  updateTopic,
+  getTopicBySlug,
+  getAllTopics,
+};

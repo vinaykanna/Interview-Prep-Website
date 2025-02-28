@@ -4,6 +4,9 @@ import Home from "./views/Home";
 import Topics from "./views/Admin/Topics";
 import Topic from "./views/Admin/Topic";
 import Admin from "./views/Admin/Admin";
+import MainTopic from "./views/MainTopic";
+import SubTopic from "./views/SubTopic";
+import QuestionPage from "./views/QuestionPage";
 
 const queryClient = new QueryClient();
 
@@ -12,7 +15,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/">
+            <Route index element={<Home />} />
+            <Route path="/prep/:mainTopic" element={<MainTopic />}>
+              <Route path=":topic" element={<SubTopic />} />
+              <Route path=":topic/:question" element={<QuestionPage />} />
+            </Route>
+          </Route>
           <Route path="/admin" element={<Admin />}>
             <Route index element={<Navigate to="/admin/topics" />} />
             <Route path="topics" element={<Topics />} />

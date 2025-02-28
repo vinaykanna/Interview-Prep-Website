@@ -3,7 +3,7 @@ import getHeaders from "../utils/getHeaders.ts";
 import { searchTopicsAndQuestions } from "./common.service.ts";
 
 function commonHander(req: Request, url: URL) {
-  if (url.pathname.includes("search") && req.method === "POST") {
+  if (url.pathname.includes("search") && req.method === "GET") {
     return searchTopicsAndQuestions(url);
   }
 

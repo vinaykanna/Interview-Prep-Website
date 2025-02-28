@@ -21,20 +21,20 @@ function searchTopicsAndQuestions(url: URL) {
       [`%${query}%`]
     );
 
-    for (const [id, name, parentId] of topics) {
+    for (const [id, name, slug] of topics) {
       result.topics.push({
         id,
         name,
-        parentId,
+        slug,
       });
     }
 
-    for (const [id, name, answer, topicId] of questions) {
+    for (const [id, name, slug, _, __, topic] of questions) {
       result.questions.push({
         id,
         name,
-        answer,
-        topicId,
+        slug,
+        topic,
       });
     }
 

@@ -58,6 +58,39 @@ function getQuestions(url: URL) {
   }
 }
 
+function getQuestion(slug: string) {
+  try {
+    const questions = db.query("SELECT * FROM questions WHERE slug = ?", [
+      slug,
+    ]);
+
+    let result = {};
+
+    if (questions?.[0]) {
+      const [id, name, slug, answer, difficulty, topic] = questions?.[0];
+
+      result = {
+        id,
+        name,
+        slug,
+        answer,
+        difficulty,
+        topic,
+      };
+    }
+
+    return new Response(JSON.stringify(result), {
+      headers: getHeaders(),
+    });
+  } catch (e) {
+    console.log(e);
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      headers: getHeaders(),
+      status: 500,
+    });
+  }
+}
+
 function deleteQuestion(url: URL) {
   const splits = url.pathname.split("/");
   const id = splits.at(-1);
@@ -104,4 +137,10 @@ async function updateQuestion(req: Request, url: URL) {
   }
 }
 
-export { createQuestion, getQuestions, deleteQuestion, updateQuestion };
+export {
+  createQuestion,
+  getQuestions,
+  getQuestion,
+  deleteQuestion,
+  updateQuestion,
+};

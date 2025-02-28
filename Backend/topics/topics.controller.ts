@@ -5,6 +5,7 @@ import {
   getTopics,
   updateTopic,
   getTopicBySlug,
+  getAllTopics,
 } from "./topics.service.ts";
 
 function topicsHandler(req: Request, url: URL) {
@@ -14,16 +15,16 @@ function topicsHandler(req: Request, url: URL) {
 
   if (req.method === "GET") {
     const TOPICS_ROUTE = new URLPattern({ pathname: "/topics" });
-    const TOPIC_ROUTE = new URLPattern({ pathname: "/topics/:slug" });
+    const ALL_TOPICS_ROUTE = new URLPattern({ pathname: "/topics/all" });
     const TOPICS_ROUTE_MATCH = TOPICS_ROUTE.exec(req.url);
-    const TOPIC_ROUTE_MATCH = TOPIC_ROUTE.exec(req.url);
+    const ALL_TOPICS_ROUTE_MATCH = ALL_TOPICS_ROUTE.exec(req.url);
+
+    if (ALL_TOPICS_ROUTE_MATCH) {
+      return getAllTopics(url);
+    }
 
     if (TOPICS_ROUTE_MATCH) {
       return getTopics(url);
-    }
-
-    if (TOPIC_ROUTE.exec(req.url)) {
-      return getTopicBySlug(TOPIC_ROUTE_MATCH?.pathname.groups.slug!);
     }
   }
 

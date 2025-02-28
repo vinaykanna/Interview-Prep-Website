@@ -1,5 +1,9 @@
 import http from "./http";
 
+function getAllTopics({ parent }: { parent: string }) {
+  return http.get(`/topics/all?parent=${parent || "none"}`);
+}
+
 function getTopics({ parent }: { parent: string }) {
   return http.get(`/topics?parent=${parent || "none"}`);
 }
@@ -20,6 +24,10 @@ function getQuestions({ topic }: { topic: string }) {
   return http.get(`/questions?topic=${topic}`);
 }
 
+function getQuestion({ topic }: { topic: string }) {
+  return http.get(`/questions/${topic}`);
+}
+
 function createQuestion(data: any) {
   return http.post(`/questions`, data);
 }
@@ -32,6 +40,10 @@ function deleteQuestion(id: number) {
   return http.delete(`/questions/${id}`);
 }
 
+function searchQuestionsAndTopics(query: string) {
+  return http.get(`/common/search?query=${query}`);
+}
+
 export {
   getTopics,
   createTopic,
@@ -41,4 +53,7 @@ export {
   deleteTopic,
   updateQuestion,
   deleteQuestion,
+  getAllTopics,
+  getQuestion,
+  searchQuestionsAndTopics,
 };

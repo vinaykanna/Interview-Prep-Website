@@ -1,14 +1,14 @@
 export interface TopicType {
   id: number;
   name: string;
-  parentId?: number;
+  slug: string;
 }
 
 export interface QuestionType {
   id: number;
   name: string;
-  answer: string;
-  topicId: number;
+  slug: string;
+  topic: string;
 }
 
 export interface SearchResultType {
