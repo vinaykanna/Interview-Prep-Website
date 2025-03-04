@@ -1,4 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
+import { API_URL } from "../ constants.ts";
 import db from "../db.ts";
 import getHeaders from "../utils/getHeaders.ts";
 import { SearchResultType } from "./common.types.ts";
@@ -51,4 +52,57 @@ function searchTopicsAndQuestions(url: URL) {
   }
 }
 
-export { searchTopicsAndQuestions };
+async function uploadAsset(req: Request) {
+  try {
+    const form = await req.formData();
+    const file = form.get("file");
+
+    if (!file) {
+      return new Response(JSON.stringify({ message: "No file uploaded" }), {
+        status: 400,
+      });
+    }
+
+    const fileName = (file as File).name.replaceAll(" ", "_");
+    const filePath = `./static/${fileName}`;
+    const fileContent = await (file as File).arrayBuffer();
+    await Deno.writeFile(filePath, new Uint8Array(fileContent));
+
+    return new Response(
+      JSON.stringify({
+        message: "Uploaded",
+        url: `${API_URL}/common/static/${fileName}`,
+      }),
+      {
+        headers: getHeaders(),
+        status: 201,
+      }
+    );
+  } catch (e) {
+    console.log(e);
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      headers: getHeaders(),
+      status: 500,
+    });
+  }
+}
+
+async function getAsset(file: string) {
+  try {
+    const filePath = `./static/${file}`;
+    const fileContent = await Deno.readFile(filePath);
+
+    return new Response(fileContent, {
+      headers: getHeaders(),
+      status: 200,
+    });
+  } catch (e) {
+    console.log(e);
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      headers: getHeaders(),
+      status: 500,
+    });
+  }
+}
+
+export { searchTopicsAndQuestions, uploadAsset, getAsset };

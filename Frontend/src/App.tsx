@@ -8,6 +8,7 @@ import MainTopic from "./views/MainTopic";
 import SubTopic from "./views/SubTopic";
 import QuestionPage from "./views/QuestionPage";
 import Intro from "./components/Intro";
+import UploadAsset from "./views/UploadAsset";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="topics" element={<Topics />} />
             <Route path="topics/:slug" element={<Topic />} />
           </Route>
+          <Route path="/admin/upload-asset" element={<UploadAsset />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

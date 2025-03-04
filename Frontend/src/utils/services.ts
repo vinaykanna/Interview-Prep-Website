@@ -44,6 +44,14 @@ function searchQuestionsAndTopics(query: string) {
   return http.get(`/common/search?query=${query}`);
 }
 
+function uploadAsset(formData: any) {
+  return http.post(`/common/upload`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+
 export {
   getTopics,
   createTopic,
@@ -56,4 +64,5 @@ export {
   getAllTopics,
   getQuestion,
   searchQuestionsAndTopics,
+  uploadAsset,
 };

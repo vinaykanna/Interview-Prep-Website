@@ -40,6 +40,11 @@
 
 @theme {
   --color-primary-solid: #e77e3a;
+  --color-secondary-solid: #7baed5;
+  --font-nunito-regular: "Nunito-Regular";
+  --font-nunito-medium: "Nunito-Medium";
+  --font-nunito-semibold: "Nunito-SemiBold";
+  --font-nunito-bold: "Nunito-Bold";
 }
 
 .markdown-body {
