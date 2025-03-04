@@ -30,7 +30,7 @@ db.execute(`
       slug TEXT NOT NULL UNIQUE,
       answer TEXT NOT NULL,
       difficulty TEXT CHECK( difficulty IN ('easy', 'medium', 'hard') ) NOT NULL,
-      topic TEXT NOT NULL REFERENCES topics(slug) ON DELETE CASCADE,
+      topic TEXT NOT NULL REFERENCES topics(slug) ON DELETE CASCADE ON UPDATE CASCADE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
@@ -48,5 +48,37 @@ db.execute(`
 db.execute(`
   CREATE INDEX IF NOT EXISTS idx_questions_topic_slug ON questions(topic);
 `);
+
+// Safely update table
+// db.execute(`
+//   -- Start a transaction
+// BEGIN TRANSACTION;
+
+// -- Create the new table with ON UPDATE CASCADE
+// CREATE TABLE questions_new (
+//     id INTEGER PRIMARY KEY AUTOINCREMENT,
+//     name TEXT NOT NULL UNIQUE,
+//     slug TEXT NOT NULL UNIQUE,
+//     answer TEXT NOT NULL,
+//     difficulty TEXT CHECK( difficulty IN ('easy', 'medium', 'hard') ) NOT NULL,
+//     topic TEXT NOT NULL REFERENCES topics(slug) ON DELETE CASCADE ON UPDATE CASCADE,
+//     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+// );
+
+// -- Copy all data from the old table to the new one
+// INSERT INTO questions_new (id, name, slug, answer, difficulty, topic, created_at, updated_at)
+// SELECT id, name, slug, answer, difficulty, topic, created_at, updated_at
+// FROM questions;
+
+// -- Drop the old table
+// DROP TABLE questions;
+
+// -- Rename the new table to the original name
+// ALTER TABLE questions_new RENAME TO questions;
+
+// -- Commit the transaction
+// COMMIT;
+//   `);
 
 export default db;
