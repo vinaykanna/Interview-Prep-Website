@@ -7,14 +7,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createQuestion, updateQuestion } from "@/utils/services";
 import { useParams } from "react-router";
 import markdown from "@/utils/markdown";
+import Select from "./Select";
+import { useInterviewPrepAdminContext } from "@/InterviewPrepAdminContext";
 
 const UpsertQuestion = ({ onClose, questionData }: any) => {
+  const { allTopics } = useInterviewPrepAdminContext();
   const queryClient = useQueryClient();
   const params = useParams();
   const [answerViewType, setAnswerViewType] = useState("source");
   const [state, setState] = useState({
     name: "",
     answer: "",
+    topic: params.slug || "",
   });
 
   useEffect(() => {
@@ -22,6 +26,7 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
       setState({
         name: questionData.name,
         answer: questionData.answer,
+        topic: questionData.topic,
       });
     }
   }, [questionData]);
@@ -55,13 +60,14 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
         data: {
           name: state.name,
           answer: state.answer,
+          topic: state.topic,
         },
       });
     } else {
       mutate({
         name: state.name,
         answer: state.answer,
-        topic: params.slug,
+        topic: state.topic,
       });
     }
   };
@@ -74,7 +80,7 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
     >
       <div
         className={twJoin(
-          "relative bg-white rounded-3xl shadow-xl w-full max-w-4xl transform overflow-y-auto max-h-[90vh]"
+          "relative bg-white rounded-3xl shadow-xl w-full max-w-4xl transform overflow-y-auto max-h-[98vh]"
         )}
       >
         <div className="flex items-center justify-between py-4 px-7 border-b border-gray-200">
@@ -89,10 +95,27 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
           </button>
         </div>
         <div className="p-7">
+          <Select
+            selectClassName="w-full"
+            placeholder="Select Topic"
+            onChange={(e: any) => {
+              setState({ ...state, topic: e.target.value });
+            }}
+            value={state.topic}
+          >
+            {allTopics?.map((topic: any) => {
+              return (
+                <option key={topic.slug} value={topic.slug}>
+                  {topic.name}
+                </option>
+              );
+            })}
+          </Select>
           <TextField
             placeholder="Question"
             value={state.name}
             onChange={(e: any) => setState({ ...state, name: e.target.value })}
+            className="mt-6"
           />
           <div className="flex justify-end gap-2 mt-6 pr-2">
             <Button

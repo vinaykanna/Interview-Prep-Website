@@ -1,11 +1,17 @@
 import http from "./http";
 
-function getAllTopics({ parent }: { parent: string }) {
-  return http.get(`/topics/all?parent=${parent || "none"}`);
-}
+function getTopics({ parent, type }: { parent?: string; type?: string }) {
+  const params: any = {};
 
-function getTopics({ parent }: { parent: string }) {
-  return http.get(`/topics?parent=${parent || "none"}`);
+  if (parent) {
+    params.parent = parent;
+  }
+
+  if (type) {
+    params.type = type;
+  }
+
+  return http.get("/topics", { params });
 }
 
 function createTopic(data: any) {
@@ -61,7 +67,6 @@ export {
   deleteTopic,
   updateQuestion,
   deleteQuestion,
-  getAllTopics,
   getQuestion,
   searchQuestionsAndTopics,
   uploadAsset,

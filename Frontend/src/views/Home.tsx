@@ -8,8 +8,8 @@ function Home() {
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["topics", params.slug || ""],
-    queryFn: () => getTopics({ parent: params.slug || "" }),
+    queryKey: ["topics", params.slug || "none"],
+    queryFn: () => getTopics({ parent: params.slug || "none" }),
   });
 
   if (isLoading) return null;

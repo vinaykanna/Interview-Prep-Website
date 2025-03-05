@@ -26,21 +26,9 @@ async function createTopic(req: Request) {
   }
 }
 
-function getTopicsByParent(result: any[], allTopics: any[], parent: string) {
-  for (const topic of allTopics) {
-    if (topic.parent === parent) {
-      result.push({
-        ...topic,
-        children: [],
-      });
-    }
-  }
-
-  return result;
-}
-
 function buildHierarchy(items: any[]) {
   const itemMap = new Map();
+
   items.forEach((item: any) =>
     itemMap.set(item.slug, { ...item, children: [] })
   );
@@ -61,100 +49,72 @@ function buildHierarchy(items: any[]) {
   return result;
 }
 
-async function getAllTopics(url: URL) {
-  try {
-    const parent = url.searchParams.get("parent");
-    const response = getTopics();
-    const allTopics = await response.json();
-    const hierarchicalItems = buildHierarchy(allTopics);
-    const result = hierarchicalItems.find((item) => item.slug === parent);
+function getAllTopics() {
+  const query = "SELECT * FROM topics";
 
-    return new Response(JSON.stringify(result?.children || []), {
-      headers: getHeaders(),
-    });
-  } catch (e) {
-    console.log(e);
-    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
-      headers: getHeaders(),
-      status: 500,
+  const topicsData = db.query(query);
+
+  const topics = [];
+
+  for (const topic of topicsData) {
+    const [id, name, slug, description, parent, createdAt, updatedAt] = topic;
+
+    topics.push({
+      id,
+      name,
+      slug,
+      description,
+      parent,
+      createdAt,
+      updatedAt,
     });
   }
+
+  return topics;
 }
 
 function getTopics(url?: URL) {
   const parent = url?.searchParams.get("parent");
+  const type = url?.searchParams.get("type");
 
   try {
-    let query = "SELECT * FROM topics";
+    let topics = getAllTopics();
 
-    if (parent && parent !== "none") {
-      query += ` WHERE parent = '${parent}'`;
-    }
+    if (type === "hierarchy") {
+      const hierarchicalItems = buildHierarchy(topics);
+      let result = hierarchicalItems;
 
-    if (parent === "none") {
-      query += " WHERE parent IS NULL";
-    }
+      if (parent && parent !== "none") {
+        const items = hierarchicalItems.find((topic) => topic.slug === parent);
+        result = items?.children || [];
+      }
 
-    const topics = db.query(query);
+      return new Response(JSON.stringify(result), {
+        headers: getHeaders(),
+        status: 200,
+      });
+    } else {
+      if (parent && parent !== "none") {
+        topics = topics.filter((topic) => topic.parent === parent);
+      }
 
-    const result = [];
+      if (parent === "none") {
+        topics = topics.filter((topic) => !topic.parent);
+      }
 
-    for (const topic of topics) {
-      const [id, name, slug, description, parent, createdAt, updatedAt] = topic;
-
-      result.push({
-        id,
-        name,
-        slug,
-        description,
-        parent,
-        createdAt,
-        updatedAt,
+      return new Response(JSON.stringify(topics), {
+        headers: getHeaders(),
       });
     }
-
-    return new Response(JSON.stringify(result), {
-      headers: getHeaders(),
-    });
-  } catch (e) {
-    console.log(e);
-    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
-      headers: getHeaders(),
-      status: 500,
-    });
-  }
-}
-
-function getTopicBySlug(slug: string) {
-  try {
-    const topics = db.query(`SELECT * FROM topics WHERE slug = ?`, [slug]);
-
-    let result = {};
-
-    for (const topic of topics) {
-      const [id, name, slug, description, parentId, createdAt, updatedAt] =
-        topic;
-
-      result = {
-        id,
-        name,
-        slug,
-        description,
-        parentId,
-        createdAt,
-        updatedAt,
-      };
-    }
-
-    return new Response(JSON.stringify(result), {
-      headers: getHeaders(),
-    });
-  } catch (e) {
-    console.log(e);
-    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
-      headers: getHeaders(),
-      status: 500,
-    });
+  } catch (error) {
+    console.log(error);
+    return new Response(
+      JSON.stringify({ message: "Internal Server Error", error }),
+      {
+        headers: getHeaders(),
+        status: 500,
+      }
+    );
   }
 }
 
@@ -183,7 +143,7 @@ async function updateTopic(req: Request, url: URL) {
 
   try {
     const body = await req.json();
-    const { name, description } = body;
+    const { name, description, parent } = body;
     const slug = sluggify(name);
 
     db.query(
@@ -191,8 +151,9 @@ async function updateTopic(req: Request, url: URL) {
        name = ?,
        slug = ?,
        description = ?,
+       parent = ?,
        updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-      [name, slug, description, id]
+      [name, slug, description, parent, id]
     );
 
     return new Response(JSON.stringify({ message: "Updated" }), {
@@ -208,11 +169,4 @@ async function updateTopic(req: Request, url: URL) {
   }
 }
 
-export {
-  createTopic,
-  getTopics,
-  deleteTopic,
-  updateTopic,
-  getTopicBySlug,
-  getAllTopics,
-};
+export { createTopic, getTopics, deleteTopic, updateTopic };

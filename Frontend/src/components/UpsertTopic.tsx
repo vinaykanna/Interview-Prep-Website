@@ -6,13 +6,17 @@ import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTopic, updateTopic } from "@/utils/services";
 import { useParams } from "react-router";
+import Select from "./Select";
+import { useInterviewPrepAdminContext } from "@/InterviewPrepAdminContext";
 
 const UpsertTopic = ({ onClose, topicData }: any) => {
+  const { allTopics } = useInterviewPrepAdminContext();
   const queryClient = useQueryClient();
   const params = useParams();
   const [state, setState] = useState({
     name: "",
     description: "",
+    parent: params.slug || "",
   });
 
   useEffect(() => {
@@ -20,6 +24,7 @@ const UpsertTopic = ({ onClose, topicData }: any) => {
       setState({
         name: topicData.name,
         description: topicData.description || "",
+        parent: topicData.parent || "",
       });
     }
   }, []);
@@ -53,13 +58,14 @@ const UpsertTopic = ({ onClose, topicData }: any) => {
         data: {
           name: state.name,
           description: state.description,
+          parent: state.parent,
         },
       });
     } else {
       mutate({
         name: state.name,
         description: state.description,
-        parent: params.slug,
+        parent: state.parent,
       });
     }
   };
@@ -87,10 +93,27 @@ const UpsertTopic = ({ onClose, topicData }: any) => {
           </button>
         </div>
         <div className="p-7">
+          <Select
+            selectClassName="w-full"
+            placeholder="Select Topic"
+            onChange={(e: any) => {
+              setState({ ...state, parent: e.target.value });
+            }}
+            value={state.parent}
+          >
+            {allTopics?.map((topic: any) => {
+              return (
+                <option key={topic.slug} value={topic.slug}>
+                  {topic.name}
+                </option>
+              );
+            })}
+          </Select>
           <TextField
             placeholder="Name"
             onChange={(e: any) => setState({ ...state, name: e.target.value })}
             value={state.name}
+            className="mt-6"
           />
           <TextField
             placeholder="Description"

@@ -2,15 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { twJoin, twMerge } from "tailwind-merge";
 import { useQuery } from "@tanstack/react-query";
-import { getAllTopics } from "@/utils/services";
 import { useNavigate, useParams } from "react-router";
+import { getTopics } from "@/utils/services";
 
 const Sidebar = ({ isOpen, setOpen }: any) => {
   const menuRef = useRef<any>(null);
   const params = useParams();
   const { data } = useQuery({
-    queryKey: ["allTopics"],
-    queryFn: () => getAllTopics({ parent: params.mainTopic || "" }),
+    queryKey: ["topicsHierarchy", params.mainTopic || "", "hierarchy"],
+    queryFn: () => {
+      return getTopics({ parent: params.mainTopic || "", type: "hierarchy" });
+    },
   });
 
   const [openItems, setOpenItems] = useState({});

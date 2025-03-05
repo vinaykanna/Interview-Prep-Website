@@ -116,12 +116,12 @@ async function updateQuestion(req: Request, url: URL) {
 
   try {
     const body = await req.json();
-    const { name, answer } = body;
+    const { name, answer, topic } = body;
     const slug = sluggify(name);
 
     db.query(
-      "UPDATE questions SET name = ?, answer = ?, slug = ? WHERE id = ?",
-      [name, answer, slug, id]
+      "UPDATE questions SET name = ?, answer = ?, slug = ?, topic = ? WHERE id = ?",
+      [name, answer, slug, topic, id]
     );
 
     return new Response(JSON.stringify({ message: "Updated" }), {

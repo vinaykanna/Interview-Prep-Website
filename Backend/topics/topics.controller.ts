@@ -4,8 +4,6 @@ import {
   deleteTopic,
   getTopics,
   updateTopic,
-  getTopicBySlug,
-  getAllTopics,
 } from "./topics.service.ts";
 
 function topicsHandler(req: Request, url: URL) {
@@ -14,18 +12,7 @@ function topicsHandler(req: Request, url: URL) {
   }
 
   if (req.method === "GET") {
-    const TOPICS_ROUTE = new URLPattern({ pathname: "/topics" });
-    const ALL_TOPICS_ROUTE = new URLPattern({ pathname: "/topics/all" });
-    const TOPICS_ROUTE_MATCH = TOPICS_ROUTE.exec(req.url);
-    const ALL_TOPICS_ROUTE_MATCH = ALL_TOPICS_ROUTE.exec(req.url);
-
-    if (ALL_TOPICS_ROUTE_MATCH) {
-      return getAllTopics(url);
-    }
-
-    if (TOPICS_ROUTE_MATCH) {
-      return getTopics(url);
-    }
+    return getTopics(url);
   }
 
   if (req.method === "DELETE") {
