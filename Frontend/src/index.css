@@ -124,6 +124,7 @@
   & img {
     max-width: 100%;
     height: auto;
+    margin-block: 1em;
   }
 
   & code {
@@ -133,6 +134,10 @@
     @media (max-width: 1024px) {
       font-size: 14px;
     }
+  }
+
+  & hr {
+    margin-block: 1em;
   }
 
   & table {
