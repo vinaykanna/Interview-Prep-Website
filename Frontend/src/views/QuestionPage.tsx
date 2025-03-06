@@ -28,7 +28,7 @@ function QuestionPage() {
       <div
         className="markdown-body mt-4"
         dangerouslySetInnerHTML={{
-          __html: markdown.parse(data?.data?.answer || ""),
+          __html: markdown.parse(data?.data?.answer || "", { breaks: true }),
         }}
       ></div>
     </section>

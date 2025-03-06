@@ -134,4 +134,17 @@
       font-size: 14px;
     }
   }
+
+  & table {
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+    width: auto;
+    margin-bottom: 20px;
+  }
+
+  & th,
+  td {
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
 }
