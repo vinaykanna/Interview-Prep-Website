@@ -15,7 +15,7 @@ function InterviewPrepAdminProvider({ children }: any) {
   const [openUpsertTopic, setOpenUpsertTopic] = useState(false);
   const [openUpsertQuestion, setOpenUpsertQuestion] = useState(false);
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["allTopics"],
     queryFn: () => getTopics({}),
   });
@@ -50,9 +50,45 @@ function InterviewPrepAdminProvider({ children }: any) {
     },
   });
 
+  const getTipicsByParent = (parent: string) => {
+    return data?.data.filter((topic: any) => topic.parent === parent);
+  };
+
   const getTipicBySlug = (slug: string) => {
     return data?.data.find((topic: any) => topic.slug === slug);
   };
+
+  function buildHierarchy(items: any[]) {
+    const itemMap = new Map();
+
+    items?.forEach((item: any) =>
+      itemMap.set(item.slug, { ...item, children: [] })
+    );
+
+    const result: any[] = [];
+
+    items.forEach((item) => {
+      if (item.parent === null) {
+        result.push(itemMap.get(item.slug));
+      } else {
+        const parent = itemMap.get(item.parent);
+        if (parent) {
+          parent.children.push(itemMap.get(item.slug));
+        }
+      }
+    });
+
+    return result;
+  }
+
+  const getHierachicalTopics = (parent: string) => {
+    const hierarchicalItems = buildHierarchy(data?.data);
+    const items = hierarchicalItems.find((topic) => topic.slug === parent);
+
+    return items?.children || [];
+  };
+
+  if (isLoading) return null;
 
   return (
     <InterviewPrepAdminContext.Provider
@@ -67,6 +103,8 @@ function InterviewPrepAdminProvider({ children }: any) {
         removeTopic,
         allTopics: data?.data,
         getTipicBySlug,
+        getTipicsByParent,
+        getHierachicalTopics,
       }}
     >
       {children}

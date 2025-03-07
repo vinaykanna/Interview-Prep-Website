@@ -26,86 +26,31 @@ async function createTopic(req: Request) {
   }
 }
 
-function buildHierarchy(items: any[]) {
-  const itemMap = new Map();
-
-  items.forEach((item: any) =>
-    itemMap.set(item.slug, { ...item, children: [] })
-  );
-
-  const result: any[] = [];
-
-  items.forEach((item) => {
-    if (item.parent === null) {
-      result.push(itemMap.get(item.slug));
-    } else {
-      const parent = itemMap.get(item.parent);
-      if (parent) {
-        parent.children.push(itemMap.get(item.slug));
-      }
-    }
-  });
-
-  return result;
-}
-
-function getAllTopics() {
-  const query = "SELECT * FROM topics";
-
-  const topicsData = db.query(query);
-
-  const topics = [];
-
-  for (const topic of topicsData) {
-    const [id, name, slug, description, parent, createdAt, updatedAt] = topic;
-
-    topics.push({
-      id,
-      name,
-      slug,
-      description,
-      parent,
-      createdAt,
-      updatedAt,
-    });
-  }
-
-  return topics;
-}
-
-function getTopics(url?: URL) {
-  const parent = url?.searchParams.get("parent");
-  const type = url?.searchParams.get("type");
-
+function getTopics() {
   try {
-    let topics = getAllTopics();
+    const query = "SELECT * FROM topics";
 
-    if (type === "hierarchy") {
-      const hierarchicalItems = buildHierarchy(topics);
-      let result = hierarchicalItems;
+    const topicsData = db.query(query);
 
-      if (parent && parent !== "none") {
-        const items = hierarchicalItems.find((topic) => topic.slug === parent);
-        result = items?.children || [];
-      }
+    const topics = [];
 
-      return new Response(JSON.stringify(result), {
-        headers: getHeaders(),
-        status: 200,
-      });
-    } else {
-      if (parent && parent !== "none") {
-        topics = topics.filter((topic) => topic.parent === parent);
-      }
+    for (const topic of topicsData) {
+      const [id, name, slug, description, parent, createdAt, updatedAt] = topic;
 
-      if (parent === "none") {
-        topics = topics.filter((topic) => !topic.parent);
-      }
-
-      return new Response(JSON.stringify(topics), {
-        headers: getHeaders(),
+      topics.push({
+        id,
+        name,
+        slug,
+        description,
+        parent,
+        createdAt,
+        updatedAt,
       });
     }
+
+    return new Response(JSON.stringify(topics), {
+      headers: getHeaders(),
+    });
   } catch (error) {
     console.log(error);
     return new Response(

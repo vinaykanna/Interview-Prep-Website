@@ -12,7 +12,7 @@ function topicsHandler(req: Request, url: URL) {
   }
 
   if (req.method === "GET") {
-    return getTopics(url);
+    return getTopics();
   }
 
   if (req.method === "DELETE") {

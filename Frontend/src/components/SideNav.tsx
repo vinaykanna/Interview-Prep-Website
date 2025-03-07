@@ -4,18 +4,14 @@ import { twJoin, twMerge } from "tailwind-merge";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import { getTopics } from "@/utils/services";
+import { useInterviewPrepAdminContext } from "@/InterviewPrepAdminContext";
 
 const Sidebar = ({ isOpen, setOpen }: any) => {
+  const { getHierachicalTopics } = useInterviewPrepAdminContext();
   const menuRef = useRef<any>(null);
   const params = useParams();
   const [openItems, setOpenItems] = useState({});
-
-  const { data } = useQuery({
-    queryKey: ["topicsHierarchy", params.mainTopic || "", "hierarchy"],
-    queryFn: () => {
-      return getTopics({ parent: params.mainTopic || "", type: "hierarchy" });
-    },
-  });
+  const menuItems = getHierachicalTopics(params.mainTopic || "");
 
   useEffect(() => {
     const handleClickOutside = (e: any) => {
@@ -47,7 +43,7 @@ const Sidebar = ({ isOpen, setOpen }: any) => {
         className={twMerge("h-full w-72 bg-white shadow-lg flex flex-col")}
       >
         <nav className="flex-1 overflow-y-auto">
-          {data?.data?.map((item: any) => (
+          {menuItems?.map((item: any) => (
             <MenuItem
               key={item.id}
               item={item}

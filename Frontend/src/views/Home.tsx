@@ -1,24 +1,17 @@
-import { getTopics } from "@/utils/services";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router";
+import { useInterviewPrepAdminContext } from "@/InterviewPrepAdminContext";
+import { useNavigate } from "react-router";
 import { twJoin } from "tailwind-merge";
 
 function Home() {
-  const params = useParams();
   const navigate = useNavigate();
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["topics", params.slug || "none"],
-    queryFn: () => getTopics({ parent: params.slug || "none" }),
-  });
-
-  if (isLoading) return null;
+  const { getTipicsByParent } = useInterviewPrepAdminContext();
+  const topics = getTipicsByParent(null);
 
   return (
     <section className="max-w-5xl mx-auto p-5">
       <h1 className="text-3xl text-center font-bold">Interview Prep</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 mt-10 gap-10">
-        {data?.data?.map((topic: any) => {
+        {topics?.map((topic: any) => {
           return (
             <div
               onClick={() => navigate(`/prep/${topic.slug}`)}

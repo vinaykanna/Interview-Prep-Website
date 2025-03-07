@@ -1,14 +1,10 @@
 import http from "./http";
 
-function getTopics({ parent, type }: { parent?: string; type?: string }) {
+function getTopics({ parent }: { parent?: string }) {
   const params: any = {};
 
   if (parent) {
     params.parent = parent;
-  }
-
-  if (type) {
-    params.type = type;
   }
 
   return http.get("/topics", { params });
