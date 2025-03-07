@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { twJoin, twMerge } from "tailwind-merge";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
-import { getTopics } from "@/utils/services";
 import { useInterviewPrepAdminContext } from "@/InterviewPrepAdminContext";
 
 const Sidebar = ({ isOpen, setOpen }: any) => {
