@@ -8,6 +8,7 @@ import { twJoin } from "tailwind-merge";
 function QuestionPage() {
   const navigate = useNavigate();
   const params = useParams();
+
   const { data, isLoading } = useQuery({
     queryKey: ["question", params.question || ""],
     queryFn: () => getQuestion({ topic: params.question || "" }),

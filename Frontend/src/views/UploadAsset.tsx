@@ -2,14 +2,19 @@ import { uploadAsset } from "@/utils/services";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { twJoin } from "tailwind-merge";
+import { BASE_API_URL } from "@/utils/http";
+import closeIcon from "../assets/close.svg";
 
-function FileInput() {
+function UploadAsset({ onClose }: any) {
   const [file, setFile] = useState<any>(null);
+  const [url, setUrl] = useState<string>("");
+
   const { mutate } = useMutation({
     mutationKey: ["uploadAsset"],
     mutationFn: uploadAsset,
     onSuccess: (response) => {
-      alert(response?.data?.url);
+      setUrl(BASE_API_URL + response?.data?.urlPath);
+
       setFile(null);
     },
   });
@@ -37,17 +42,24 @@ function FileInput() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
-      <div className="w-full max-w-lg p-8 bg-white rounded-2xl shadow-xl transform transition-all hover:shadow-2xl">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          Upload Your File
-        </h2>
-
-        {/* Hidden Input + Custom Upload Area */}
+    <div
+      className={twJoin(
+        "fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#00000066]"
+      )}
+    >
+      <div className="w-full max-w-2xl p-8 pt-4 bg-white rounded-2xl shadow-xl transform transition-all hover:shadow-2xl">
+        <div className="flex gap-5 justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-center text-gray-800 font-nunito-semibold">
+            Upload Your File
+          </h2>
+          <button className="cursor-pointer">
+            <img src={closeIcon} alt="close" onClick={onClose} />
+          </button>
+        </div>
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
-          className="relative flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+          className="relative min-h-52 flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
         >
           <input
             type="file"
@@ -76,7 +88,6 @@ function FileInput() {
           </p>
         </div>
 
-        {/* File Preview */}
         {file && (
           <div className="mt-6 p-4 bg-gray-100 rounded-lg flex items-center justify-between">
             <div className="flex items-center">
@@ -104,7 +115,6 @@ function FileInput() {
             </button>
           </div>
         )}
-
         <button
           disabled={!file}
           onClick={handleUpload}
@@ -116,9 +126,22 @@ function FileInput() {
         >
           Upload
         </button>
+        {url && (
+          <div className="mt-6 p-4 bg-gray-100 rounded-lg">
+            <span className="text-gray-800 font-medium">File URL : </span>
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 break-all hover:text-blue-700 font-medium cursor-pointer "
+            >
+              {url}
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export default FileInput;
+export default UploadAsset;

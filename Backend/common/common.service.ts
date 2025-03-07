@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-explicit-any
-import { API_URL } from "../ constants.ts";
 import db from "../db.ts";
 import getHeaders from "../utils/getHeaders.ts";
 import { SearchResultType } from "./common.types.ts";
@@ -71,7 +70,7 @@ async function uploadAsset(req: Request) {
     return new Response(
       JSON.stringify({
         message: "Uploaded",
-        url: `${API_URL}/common/static/${fileName}`,
+        urlPath: `/common/static/${fileName}`,
       }),
       {
         headers: getHeaders(),

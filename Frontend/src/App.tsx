@@ -8,7 +8,6 @@ import MainTopic from "./views/MainTopic";
 import SubTopic from "./views/SubTopic";
 import QuestionPage from "./views/QuestionPage";
 import Intro from "./components/Intro";
-import UploadAsset from "./views/UploadAsset";
 import InterviewPrepAdminProvider from "./InterviewPrepAdminContext";
 import QuestionsList from "./views/QuestionsList";
 
@@ -37,7 +36,6 @@ function App() {
               <Route path="topics" element={<Topics />} />
               <Route path="topics/:slug" element={<Topic />} />
             </Route>
-            <Route path="/admin/upload-asset" element={<UploadAsset />} />
           </Routes>
         </InterviewPrepAdminProvider>
       </BrowserRouter>

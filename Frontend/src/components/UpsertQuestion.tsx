@@ -85,7 +85,7 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
   return (
     <div
       className={twJoin(
-        "fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#00000066]"
+        "fixed inset-0 z-10 flex items-center justify-center p-4 bg-[#00000066]"
       )}
     >
       <div
