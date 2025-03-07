@@ -1,41 +1,37 @@
-import { getQuestions } from "@/utils/services";
-import { useQuery } from "@tanstack/react-query";
+import { useInterviewPrepAdminContext } from "@/InterviewPrepAdminContext";
+import markdown from "@/utils/markdown";
 import { useNavigate, useParams } from "react-router";
-import { twJoin } from "tailwind-merge";
 
-function QuestionPage() {
+function SubTopic() {
+  const { getTipicBySlug } = useInterviewPrepAdminContext();
   const params = useParams();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["topicQuestions", params.topic || ""],
-    queryFn: () => getQuestions({ topic: params.topic || "" }),
-  });
-
-  if (isLoading) return null;
+  const topicData = getTipicBySlug(params.topic || "");
 
   return (
     <section>
-      {data?.data?.map((question: any) => {
-        return (
-          <div
-            onClick={() => navigate(`${question.slug}`)}
-            className={twJoin(
-              "shadow-[0px_4px_10px_0px_#E77E3A33] rounded-lg",
-              "p-4 cursor-pointer mt-4"
-            )}
-          >
-            <h4 className="text-lg font-semibold">{question.name}</h4>
-          </div>
-        );
-      })}
-      {data?.data?.length === 0 && (
-        <h4 className="text-lg font-bold text-gray-600 text-center mt-10">
-          No questions found
-        </h4>
-      )}
+      <div className="flex flex-col-reverse sm:flex-row justify-between gap-6 items-start sm:items-center border-b border-gray-200 pb-5">
+        <h3 className="text-3xl font-bold text-primary-solid">
+          {topicData?.name}
+        </h3>
+        <button
+          onClick={() => navigate(`questions`)}
+          className="bg-primary-solid self-end sm:self-auto text-white text-sm px-4 py-2 rounded cursor-pointer"
+        >
+          Explore Questions
+        </button>
+      </div>
+      <div
+        className="markdown-body mt-6"
+        dangerouslySetInnerHTML={{
+          __html: markdown.parse(topicData?.description || "", {
+            breaks: true,
+          }),
+        }}
+      />
     </section>
   );
 }
 
-export default QuestionPage;
+export default SubTopic;

@@ -3,6 +3,7 @@ import { getQuestion } from "@/utils/services";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
+import { twJoin } from "tailwind-merge";
 
 function QuestionPage() {
   const navigate = useNavigate();
@@ -18,7 +19,10 @@ function QuestionPage() {
     <section>
       <button
         onClick={() => navigate(-1)}
-        className="cursor-pointer bg-gray-200 font-bold font-nunito-semibold text-secondary-solid px-2 py-1 rounded flex items-center gap-1"
+        className={twJoin(
+          "cursor-pointer bg-gray-200 font-bold font-nunito-semibold",
+          "px-2 py-1 rounded flex items-center gap-1"
+        )}
       >
         <ChevronLeft className="w-4 h-4" /> Back
       </button>

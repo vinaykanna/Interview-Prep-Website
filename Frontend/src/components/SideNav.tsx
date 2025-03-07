@@ -8,14 +8,14 @@ import { getTopics } from "@/utils/services";
 const Sidebar = ({ isOpen, setOpen }: any) => {
   const menuRef = useRef<any>(null);
   const params = useParams();
+  const [openItems, setOpenItems] = useState({});
+
   const { data } = useQuery({
     queryKey: ["topicsHierarchy", params.mainTopic || "", "hierarchy"],
     queryFn: () => {
       return getTopics({ parent: params.mainTopic || "", type: "hierarchy" });
     },
   });
-
-  const [openItems, setOpenItems] = useState({});
 
   useEffect(() => {
     const handleClickOutside = (e: any) => {
@@ -75,6 +75,7 @@ function MenuItem({ toggleItem, openItems, setOpen, item, level = 0 }: any) {
         onClick={() => {
           if (hasChildren) {
             toggleItem(item.id);
+            navigate(`${item.slug}`);
           }
 
           if (!hasChildren) {

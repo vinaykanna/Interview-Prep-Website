@@ -10,23 +10,31 @@ import markdown from "@/utils/markdown";
 import Select from "./Select";
 import { useInterviewPrepAdminContext } from "@/InterviewPrepAdminContext";
 
+const difficulties = [
+  { label: "Easy", value: "easy" },
+  { label: "Medium", value: "medium" },
+  { label: "Hard", value: "hard" },
+];
+
 const UpsertQuestion = ({ onClose, questionData }: any) => {
   const { allTopics } = useInterviewPrepAdminContext();
   const queryClient = useQueryClient();
   const params = useParams();
   const [answerViewType, setAnswerViewType] = useState("source");
   const [state, setState] = useState({
+    topic: params.slug || "",
+    difficulty: "",
     name: "",
     answer: "",
-    topic: params.slug || "",
   });
 
   useEffect(() => {
     if (questionData) {
       setState({
+        topic: questionData.topic,
+        difficulty: questionData.difficulty || "",
         name: questionData.name,
         answer: questionData.answer,
-        topic: questionData.topic,
       });
     }
   }, [questionData]);
@@ -58,16 +66,18 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
       questionUpdate({
         id: questionData.id,
         data: {
+          topic: state.topic,
+          difficulty: state.difficulty,
           name: state.name,
           answer: state.answer,
-          topic: state.topic,
         },
       });
     } else {
       mutate({
+        topic: state.topic,
+        difficulty: state.difficulty,
         name: state.name,
         answer: state.answer,
-        topic: state.topic,
       });
     }
   };
@@ -107,6 +117,24 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
               return (
                 <option key={topic.slug} value={topic.slug}>
                   {topic.name}
+                </option>
+              );
+            })}
+          </Select>
+          <Select
+            className="mt-6"
+            selectClassName="w-full"
+            placeholder="Select Difficulty"
+            onChange={(e: any) => {
+              setState({ ...state, difficulty: e.target.value });
+            }}
+            value={state.difficulty}
+            defaultOptionLabel="Select Difficulty"
+          >
+            {difficulties?.map((topic: any) => {
+              return (
+                <option key={topic.value} value={topic.value}>
+                  {topic.label}
                 </option>
               );
             })}
@@ -159,7 +187,9 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
           <Button
             onClick={handleSubmit}
             className="mt-6 w-full"
-            disabled={!state.name || !state.answer}
+            disabled={
+              !state.name || !state.answer || !state.topic || !state.difficulty
+            }
           >
             Submit
           </Button>

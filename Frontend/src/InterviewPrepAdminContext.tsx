@@ -50,6 +50,10 @@ function InterviewPrepAdminProvider({ children }: any) {
     },
   });
 
+  const getTipicBySlug = (slug: string) => {
+    return data?.data.find((topic: any) => topic.slug === slug);
+  };
+
   return (
     <InterviewPrepAdminContext.Provider
       value={{
@@ -62,6 +66,7 @@ function InterviewPrepAdminProvider({ children }: any) {
         removeQuestion,
         removeTopic,
         allTopics: data?.data,
+        getTipicBySlug,
       }}
     >
       {children}

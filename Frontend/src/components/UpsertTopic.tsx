@@ -1,5 +1,5 @@
 import closeIcon from "../assets/close.svg";
-import { twJoin } from "tailwind-merge";
+import { twJoin, twMerge } from "tailwind-merge";
 import TextField from "./TextField";
 import Button from "./Button";
 import { useEffect, useState } from "react";
@@ -8,11 +8,14 @@ import { createTopic, updateTopic } from "@/utils/services";
 import { useParams } from "react-router";
 import Select from "./Select";
 import { useInterviewPrepAdminContext } from "@/InterviewPrepAdminContext";
+import markdown from "@/utils/markdown";
 
 const UpsertTopic = ({ onClose, topicData }: any) => {
   const { allTopics } = useInterviewPrepAdminContext();
   const queryClient = useQueryClient();
   const params = useParams();
+  const [descriptionViewType, setDescriptionViewType] = useState("source");
+
   const [state, setState] = useState({
     name: "",
     description: "",
@@ -78,7 +81,7 @@ const UpsertTopic = ({ onClose, topicData }: any) => {
     >
       <div
         className={twJoin(
-          "relative bg-white rounded-3xl shadow-xl w-full max-w-lg transform"
+          "relative bg-white rounded-3xl shadow-xl w-full max-w-4xl transform overflow-y-auto max-h-[98vh]"
         )}
       >
         <div className="flex items-center justify-between py-4 px-7 border-b border-gray-200">
@@ -115,17 +118,47 @@ const UpsertTopic = ({ onClose, topicData }: any) => {
             value={state.name}
             className="mt-6"
           />
-          <TextField
-            placeholder="Description"
-            textArea
-            name="message"
-            rows={3}
-            className="mt-6"
-            value={state.description}
-            onChange={(e: any) => {
-              setState({ ...state, description: e.target.value });
-            }}
-          />
+          <div className="flex justify-end gap-2 mt-6 pr-2">
+            <Button
+              onClick={() => setDescriptionViewType("source")}
+              className={twMerge(
+                "bg-transparent border text-secondary border-b-0 rounded-b-none",
+                descriptionViewType === "source" && "bg-black text-white"
+              )}
+            >
+              Source
+            </Button>
+            <Button
+              onClick={() => setDescriptionViewType("preview")}
+              className={twMerge(
+                "bg-transparent border text-secondary border-b-0 rounded-b-none",
+                descriptionViewType === "preview" && "bg-black text-white"
+              )}
+            >
+              Preview
+            </Button>
+          </div>
+          {descriptionViewType === "source" && (
+            <TextField
+              placeholder="Description"
+              textArea
+              rows={15}
+              value={state.description}
+              onChange={(e: any) => {
+                setState({ ...state, description: e.target.value });
+              }}
+            />
+          )}
+          {descriptionViewType === "preview" && (
+            <div
+              className="markdown-body px-4 py-2 border-[1px] border-black border-solid rounded-lg h-[390px] overflow-y-auto"
+              dangerouslySetInnerHTML={{
+                __html: markdown.parse(state.description || "", {
+                  breaks: true,
+                }),
+              }}
+            ></div>
+          )}
           <Button
             onClick={handleSubmit}
             className="mt-6 w-full"
