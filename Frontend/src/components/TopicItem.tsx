@@ -9,7 +9,7 @@ function TopiItem({ topic, navigate }: any) {
   const handleRightClick = (e: any) => {
     e.preventDefault();
     setIsVisible(true);
-    setPosition({ x: e.clientX, y: e.clientY });
+    setPosition({ x: e.pageX, y: e.pageY });
   };
 
   return (
