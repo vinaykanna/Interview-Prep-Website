@@ -120,7 +120,7 @@ const SearchDialog = ({ isOpen, setIsOpen }: any) => {
                           key={question?.id}
                           onClick={() => {
                             handleClick(
-                              `/prep/${params.mainTopic}/${question.topic}/${question.slug}`
+                              `/prep/${params.mainTopic}/${question.topic}/questions/${question.slug}`
                             );
                           }}
                         />
