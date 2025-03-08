@@ -1,12 +1,14 @@
+import Tabs from "@/components/Tabs";
 import { getQuestions } from "@/utils/services";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { twJoin } from "tailwind-merge";
 
 function QuestionsList() {
   const params = useParams();
   const navigate = useNavigate();
+  let [searchParams] = useSearchParams();
 
   const { data, isLoading } = useQuery({
     queryKey: ["topicQuestions", params.topic || ""],
@@ -14,6 +16,26 @@ function QuestionsList() {
   });
 
   if (isLoading) return null;
+
+  const groupedQuestions = data?.data?.reduce((acc: any, question: any) => {
+    const difficulty = question.difficulty;
+
+    if (!acc[difficulty]) {
+      acc[difficulty] = [];
+    }
+
+    acc[difficulty].push(question);
+
+    return acc;
+  }, {});
+
+  const tabs = Object.keys(groupedQuestions).map((key) => ({
+    title: key,
+    value: key,
+    order: key === "easy" ? 1 : key === "medium" ? 2 : 3,
+  }));
+
+  const activeTab = searchParams.get("tab") || tabs[0]?.value;
 
   return (
     <section>
@@ -26,16 +48,20 @@ function QuestionsList() {
       >
         <ChevronLeft className="w-4 h-4" /> Back
       </button>
-      {data?.data?.map((question: any) => {
+      {Object.keys(groupedQuestions)?.length > 1 && <Tabs tabs={tabs} />}
+      {groupedQuestions[activeTab]?.map((question: any) => {
         return (
           <div
+            key={question.id}
             onClick={() => navigate(`${question.slug}`)}
             className={twJoin(
               "shadow-[0px_4px_10px_0px_#E77E3A33] rounded-lg",
               "p-4 cursor-pointer mt-4"
             )}
           >
-            <h4 className="text-base font-semibold">{question.name}</h4>
+            <h4 className="text-sm sm:text-base font-semibold">
+              {question.name}
+            </h4>
           </div>
         );
       })}

@@ -86,7 +86,9 @@ function MenuItem({ toggleItem, openItems, setOpen, item, level = 0 }: any) {
       >
         <div className="flex items-center gap-3">
           {item.icon && <span>{item.icon}</span>}
-          <span className="text-md font-bold">{item.name}</span>
+          <span className="text-base font-bold font-nunito-semibold">
+            {item.name}
+          </span>
         </div>
         {hasChildren &&
           (isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
