@@ -34,8 +34,8 @@ function QuestionsList() {
     value: key,
     order: key === "easy" ? 1 : key === "medium" ? 2 : 3,
   }));
-
-  const activeTab = searchParams.get("tab") || tabs[0]?.value;
+  const sortedTabs = tabs?.sort((a: any, b: any) => a.order - b.order);
+  const activeTab = searchParams.get("tab") || sortedTabs[0]?.value;
 
   return (
     <section>
@@ -48,7 +48,7 @@ function QuestionsList() {
       >
         <ChevronLeft className="w-4 h-4" /> Back
       </button>
-      {Object.keys(groupedQuestions)?.length > 1 && <Tabs tabs={tabs} />}
+      {Object.keys(groupedQuestions)?.length > 1 && <Tabs tabs={sortedTabs} />}
       {groupedQuestions[activeTab]?.map((question: any) => {
         return (
           <div
