@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, setOpen }: any) => {
   return (
     <div
       className={twMerge(
-        "fixed top-0 h-full w-full lg:w-72 lg:left-0 bg-[rgba(0,0,0,0.3)] lg:bg-transparent",
+        "fixed top-0 h-full z-10 w-full lg:w-72 lg:left-0 bg-[rgba(0,0,0,0.3)] lg:bg-transparent",
         isOpen ? "left-0" : "-left-full"
       )}
     >
