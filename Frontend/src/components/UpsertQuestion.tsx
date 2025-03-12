@@ -23,10 +23,12 @@ const UpsertQuestion = ({ onClose, questionData }: any) => {
   const [answerViewType, setAnswerViewType] = useState("source");
   const [state, setState] = useState({
     topic: params.slug || "",
-    difficulty: "",
+    difficulty: "easy",
     name: "",
     answer: "",
   });
+
+  console.log(params);
 
   useEffect(() => {
     if (questionData) {

@@ -9,7 +9,7 @@ function Header({ setOpenMenu }: any) {
 
   return (
     <>
-      <header className="bg-white shadow-lg p-3 flex items-center gap-10">
+      <header className="bg-white sticky top-0 shadow-lg p-3 flex items-center gap-10">
         <button
           className="cursor-pointer lg:hidden"
           onClick={() => setOpenMenu(true)}

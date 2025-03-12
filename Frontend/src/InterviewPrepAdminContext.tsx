@@ -1,6 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import UpsertQuestion from "@/components/UpsertQuestion";
-import UpsertTopic from "@/components/UpsertTopic";
 import { deleteQuestion, deleteTopic, getTopics } from "@/utils/services";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router";
@@ -97,6 +95,8 @@ function InterviewPrepAdminProvider({ children }: any) {
         selectedTopic,
         setSelectedTopic,
         setSelectedQuestion,
+        openUpsertQuestion,
+        openUpsertTopic,
         setOpenUpsertQuestion,
         setOpenUpsertTopic,
         removeQuestion,
@@ -108,19 +108,6 @@ function InterviewPrepAdminProvider({ children }: any) {
       }}
     >
       {children}
-
-      {openUpsertTopic && (
-        <UpsertTopic
-          topicData={selectedTopic}
-          onClose={() => setOpenUpsertTopic(false)}
-        />
-      )}
-      {openUpsertQuestion && (
-        <UpsertQuestion
-          questionData={selectedQuestion}
-          onClose={() => setOpenUpsertQuestion(false)}
-        />
-      )}
     </InterviewPrepAdminContext.Provider>
   );
 }
