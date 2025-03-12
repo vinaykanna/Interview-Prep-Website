@@ -11,7 +11,7 @@ function SubTopic() {
 
   return (
     <section>
-      <div className="flex flex-col-reverse sm:flex-row justify-between gap-6 items-start sm:items-center border-b border-gray-200 pb-5">
+      <div className="flex flex-col-reverse sm:flex-row justify-between gap-2 sm:gap-6 items-start sm:items-center border-b border-gray-200 sm:pb-5 pb-2">
         <h3 className="text-3xl font-bold text-primary-solid">
           {topicData?.name}
         </h3>
