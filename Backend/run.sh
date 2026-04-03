@@ -1,0 +1,1 @@
+pm2 start deno --name interview-prep-api -- run --allow-all main.ts
