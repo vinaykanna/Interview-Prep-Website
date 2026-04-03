@@ -25,7 +25,7 @@ Deno.serve({ port: 4000 }, (_req) => {
     return commonHander(_req, url);
   }
 
-  return new Response(JSON.stringify({ message: "Not Found" }), {
+  return new Response(JSON.stringify({ message: "Route Not Found" }), {
     headers: getHeaders(),
     status: 404,
   });
