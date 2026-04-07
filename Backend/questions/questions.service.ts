@@ -10,7 +10,7 @@ async function createQuestion(req: Request) {
 
     db.query(
       "INSERT INTO questions (name, slug, answer, difficulty, topic) VALUES (?, ?, ?, ?, ?)",
-      [name, slug, answer, difficulty, topic]
+      [name, slug, answer, difficulty, topic],
     );
 
     return new Response(JSON.stringify({ message: "Created" }), {
@@ -121,7 +121,7 @@ async function updateQuestion(req: Request, url: URL) {
 
     db.query(
       "UPDATE questions SET name = ?, answer = ?, difficulty = ?, slug = ?, topic = ? WHERE id = ?",
-      [name, answer, difficulty, slug, topic, id]
+      [name, answer, difficulty, slug, topic, id],
     );
 
     return new Response(JSON.stringify({ message: "Updated" }), {
