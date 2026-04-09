@@ -58,6 +58,48 @@ function getQuestions(url: URL) {
   }
 }
 
+function getAllQuestions(url: URL) {
+  try {
+    const limit = url.searchParams.get("limit") || 10;
+    const offset = url.searchParams.get("offset") || 0;
+    const count = db.query("SELECT COUNT(*) FROM questions")[0][0];
+    const questions = db.query("SELECT * FROM questions LIMIT ? OFFSET ?", [
+      limit,
+      offset,
+    ]);
+
+    const result = [];
+
+    for (const [id, name, slug, answer, difficulty, topic] of questions) {
+      result.push({
+        id,
+        name,
+        slug,
+        difficulty,
+        answer,
+        topic,
+      });
+    }
+
+    return new Response(
+      JSON.stringify({
+        total: count,
+        questions: result,
+      }),
+      {
+        headers: getHeaders(),
+      },
+    );
+  } catch (e) {
+    console.log(e);
+
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      headers: getHeaders(),
+      status: 500,
+    });
+  }
+}
+
 function getQuestion(slug: string) {
   try {
     const questions = db.query("SELECT * FROM questions WHERE slug = ?", [
@@ -140,6 +182,7 @@ async function updateQuestion(req: Request, url: URL) {
 export {
   createQuestion,
   getQuestions,
+  getAllQuestions,
   getQuestion,
   deleteQuestion,
   updateQuestion,

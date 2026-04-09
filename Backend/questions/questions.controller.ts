@@ -5,6 +5,7 @@ import {
   deleteQuestion,
   getQuestions,
   getQuestion,
+  getAllQuestions,
 } from "./questions.service.ts";
 
 function questionsHandler(req: Request, url: URL) {
@@ -14,9 +15,14 @@ function questionsHandler(req: Request, url: URL) {
 
   if (req.method === "GET") {
     const QUESTIONS_ROUTE = new URLPattern({ pathname: "/questions" });
+    const ALL_QUESTIONS_ROUTE = new URLPattern({ pathname: "/questions/all" });
     const QUESTION_ROUTE = new URLPattern({ pathname: "/questions/:slug" });
     const QUESTIONS_ROUTE_MATCH = QUESTIONS_ROUTE.exec(req.url);
     const QUESTION_ROUTE_MATCH = QUESTION_ROUTE.exec(req.url);
+
+    if (ALL_QUESTIONS_ROUTE) {
+      return getAllQuestions(url);
+    }
 
     if (QUESTION_ROUTE_MATCH) {
       return getQuestion(QUESTION_ROUTE_MATCH.pathname.groups.slug!);
