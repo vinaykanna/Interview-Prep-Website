@@ -14,13 +14,14 @@ function questionsHandler(req: Request, url: URL) {
   }
 
   if (req.method === "GET") {
-    const QUESTIONS_ROUTE = new URLPattern({ pathname: "/questions" });
     const ALL_QUESTIONS_ROUTE = new URLPattern({ pathname: "/questions/all" });
+    const QUESTIONS_ROUTE = new URLPattern({ pathname: "/questions" });
     const QUESTION_ROUTE = new URLPattern({ pathname: "/questions/:slug" });
     const QUESTIONS_ROUTE_MATCH = QUESTIONS_ROUTE.exec(req.url);
     const QUESTION_ROUTE_MATCH = QUESTION_ROUTE.exec(req.url);
+    const ALL_QUESTIONS_ROUTE_MATCH = ALL_QUESTIONS_ROUTE.exec(req.url);
 
-    if (ALL_QUESTIONS_ROUTE) {
+    if (ALL_QUESTIONS_ROUTE_MATCH) {
       return getAllQuestions(url);
     }
 
