@@ -75,7 +75,7 @@ async function uploadAsset(req: Request, res: Response) {
 async function getAsset(req: Request, res: Response) {
   try {
     const { file } = req.params;
-    const filePath = path.join(__dirname, "..", "static", file);
+    const filePath = path.join(__dirname, "..", "static", file as string);
 
     res.sendFile(filePath);
   } catch (e) {
