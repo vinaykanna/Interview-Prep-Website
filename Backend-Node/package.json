@@ -5,8 +5,7 @@
   "main": "main.ts",
   "scripts": {
     "dev": "tsx watch main.ts",
-    "build": "tsc",
-    "start": "npm run build && node dist/main.js"
+    "start": "tsx main.ts"
   },
   "dependencies": {
     "better-sqlite3": "^11.8.1",
