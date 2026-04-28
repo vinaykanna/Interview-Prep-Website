@@ -3,10 +3,6 @@ import db from "../db";
 import { SearchResultType } from "./common.types";
 import fs from "fs/promises";
 import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 function searchTopicsAndQuestions(req: Request, res: Response) {
   try {

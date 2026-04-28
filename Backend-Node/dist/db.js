@@ -1,0 +1,46 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const better_sqlite3_1 = __importDefault(require("better-sqlite3"));
+const path_1 = __importDefault(require("path"));
+const db = new better_sqlite3_1.default(path_1.default.join(__dirname, "sqlite.db"));
+// Enable WAL mode for better concurrency
+db.pragma("journal_mode = WAL");
+// Tables
+db.exec(`
+  CREATE TABLE IF NOT EXISTS topics (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      slug TEXT NOT NULL UNIQUE,
+      description TEXT DEFAULT NULL,
+      parent TEXT REFERENCES topics(slug) ON DELETE CASCADE DEFAULT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+`);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS questions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      slug TEXT NOT NULL UNIQUE,
+      answer TEXT NOT NULL,
+      difficulty TEXT CHECK( difficulty IN ('easy', 'medium', 'hard') ) NOT NULL,
+      topic TEXT NOT NULL REFERENCES topics(slug) ON DELETE CASCADE ON UPDATE CASCADE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+`);
+// Indexes
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_topics_slug ON topics(slug);
+`);
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_questions_slug ON questions(slug);
+`);
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_questions_topic_slug ON questions(topic);
+`);
+exports.default = db;
+//# sourceMappingURL=db.js.map
